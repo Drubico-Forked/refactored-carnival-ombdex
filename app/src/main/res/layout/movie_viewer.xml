@@ -20,7 +20,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:title="@string/n_a_value"
-            app:toolbarId="@id/toolbarviewer">
+            app:toolbarId="@id/toolbarpreview">
 
             <ImageView
                 android:id="@+id/app_bar_image_viewer"
@@ -43,10 +43,10 @@
                 android:textColor="#fff"
                 android:textSize="25sp" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarviewer"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+            <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbarpreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

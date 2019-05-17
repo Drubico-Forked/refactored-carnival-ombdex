@@ -18,8 +18,11 @@ class RVMovieAdapter(var movies: List<Movie>, val clickListener: (Movie) -> Unit
 
     override fun getItemCount(): Int = movies.size
 
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(movies[position], clickListener)
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    fun changeDataSet(newMovieList: List<Movie>) {
+        movies = newMovieList
+        notifyDataSetChanged()
     }
 
     class ViewHolder(item: View): RecyclerView.ViewHolder(item){
