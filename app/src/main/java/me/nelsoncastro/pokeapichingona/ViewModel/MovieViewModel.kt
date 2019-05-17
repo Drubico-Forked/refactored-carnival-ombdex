@@ -20,12 +20,12 @@ class MovieViewModel : ViewModel () {
 
     private val repository = MovieRepository(ApiFactory.ombdApi)
 
-    val movieitem = MutableLiveData<Movie>()
+    val movieslist = MutableLiveData<MutableList<Movie>>()
 
     fun fetchMovie(name: String){
         scope.launch {
-            val movie = repository.getMovieByName(name)
-            movieitem.postValue(movie)
+            val movies = repository.getMoviesByName(name)
+            movieslist.postValue(movies)
         }
     }
 
