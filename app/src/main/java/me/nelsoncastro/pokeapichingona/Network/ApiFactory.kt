@@ -5,8 +5,7 @@ import me.nelsoncastro.pokeapichingona.Constants.AppConstants
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 
 object ApiFactory {
@@ -30,8 +29,8 @@ object ApiFactory {
 
     fun retrofit() : Retrofit = Retrofit.Builder()
             .client(ombdClient)
-            .baseUrl("http://www.omdbapi.com/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("http://www.omdbapi.com")
+            .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 

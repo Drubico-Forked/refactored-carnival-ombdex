@@ -11,7 +11,7 @@ import retrofit2.http.Url
 
 interface OmbdApi {
 
-    @GET
-    fun getMoviesByName(@Url name: String): Deferred<Response<OmbdMovieResponse>>
+    @GET("/")
+    fun getMoviesByName(@Query("s") name: String): Deferred<Response<OmbdMovieResponse>>
 
 }

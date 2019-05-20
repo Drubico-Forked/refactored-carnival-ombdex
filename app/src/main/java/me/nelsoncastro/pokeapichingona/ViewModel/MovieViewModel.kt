@@ -25,7 +25,7 @@ class MovieViewModel : ViewModel () {
     fun fetchMovie(name: String){
         scope.launch {
             val movies = repository.getMoviesByName(name)
-            movieslist.postValue(movies)
+            movieslist.postValue(movies?: arrayListOf(Movie(Title = "Dummy 1"), Movie(Title = "Dummy 2")))
         }
     }
 
