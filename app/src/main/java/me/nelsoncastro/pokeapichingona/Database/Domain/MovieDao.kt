@@ -11,7 +11,7 @@ import me.nelsoncastro.pokeapichingona.Models.Movie
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovie(movie: Movie)
+    suspend fun insertMovie(movie: Movie)
 
     @Query("select * from Movie")
     fun loadAllMovies(): LiveData<List<Movie>>

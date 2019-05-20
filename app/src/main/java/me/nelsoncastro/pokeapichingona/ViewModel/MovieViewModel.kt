@@ -23,10 +23,19 @@ class MovieViewModel : ViewModel () {
 
     val movieslist = MutableLiveData<MutableList<MoviePreview>>()
 
+    val movieResult = MutableLiveData<Movie>()
+
     fun fetchMovie(name: String){
         scope.launch {
             val movies = repository.getMoviesByName(name)
             movieslist.postValue(movies?: arrayListOf(MoviePreview(Title = "Dummy 1"), MoviePreview(Title = "Dummy 2")))
+        }
+    }
+
+    fun fetchMovieByTitle(name: String){
+        scope.launch {
+            val movie = repository.getMovieByTitle(name)
+            movieResult.postValue(movie)
         }
     }
 

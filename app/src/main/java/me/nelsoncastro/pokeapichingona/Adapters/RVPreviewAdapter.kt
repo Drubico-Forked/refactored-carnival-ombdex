@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.cardview_preview.view.*
 import me.nelsoncastro.pokeapichingona.Models.MoviePreview
 import me.nelsoncastro.pokeapichingona.R
 
-class RVPreviewAdapter(var movies: List<MoviePreview>, val clickListener: (MoviePreview) -> Unit ) : RecyclerView.Adapter<RVPreviewAdapter.ViewHolder>(){
+class RVPreviewAdapter(var movies: List<MoviePreview>, val clickListener: (MoviePreview, View) -> Unit ) : RecyclerView.Adapter<RVPreviewAdapter.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.cardview_preview, parent, false)
         return ViewHolder(view)
@@ -25,14 +25,15 @@ class RVPreviewAdapter(var movies: List<MoviePreview>, val clickListener: (Movie
     }
 
     class ViewHolder(item: View): RecyclerView.ViewHolder(item){
-        fun bind(movie: MoviePreview, clickListener: (MoviePreview) -> Unit) = with(itemView){
+        fun bind(movie: MoviePreview, clickListener: (MoviePreview, View) -> Unit) = with(itemView){
             Glide.with(itemView.context)
                 .load(movie.Poster)
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(preview_image_cv)
             preview_title_cv.text = movie.Title
             preview_year_cv.text = movie.Year
-            this.setOnClickListener { clickListener(movie) }
+            if (movie.selected) preview_selected_cv.visibility = View.VISIBLE else preview_selected_cv.visibility = View.GONE
+            this.setOnClickListener { clickListener(movie, preview_selected_cv) }
         }
     }
 }
