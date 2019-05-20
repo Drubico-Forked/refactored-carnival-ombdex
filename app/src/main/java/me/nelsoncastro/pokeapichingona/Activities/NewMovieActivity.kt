@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.preview_add_movie.*
 import me.nelsoncastro.pokeapichingona.Adapters.RVMovieAdapter
+import me.nelsoncastro.pokeapichingona.Adapters.RVPreviewAdapter
 import me.nelsoncastro.pokeapichingona.Models.Movie
+import me.nelsoncastro.pokeapichingona.Models.MoviePreview
 import me.nelsoncastro.pokeapichingona.R
 import me.nelsoncastro.pokeapichingona.ViewModel.MovieViewModel
 
@@ -23,12 +25,12 @@ class NewMovieActivity : AppCompatActivity(){
         bt_search.setOnClickListener {
             val movieNameQuery = et_search.text.toString()
             if (movieNameQuery.isNotEmpty() && movieNameQuery.isNotBlank()) {
-                MovieViewModel.fetchMovie("http://www.omdbapi.com/?apikey=8fd871e4&?s=Star+Wars")
+                MovieViewModel.fetchMovie(movieNameQuery)
                 MovieViewModel.movieslist.observe(this, Observer { result ->
                     val layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
                     val recyclerView = rv_preview
-                    val moviesPreviewAdapter = RVMovieAdapter(movies = result,
-                        clickListener = { movie:Movie -> Toast.makeText(this, "Selected ${movie.Title}", Toast.LENGTH_SHORT).show()})
+                    val moviesPreviewAdapter = RVPreviewAdapter(movies = result,
+                        clickListener = { movie:MoviePreview -> Toast.makeText(this, "Selected ${movie.Title}", Toast.LENGTH_SHORT).show()})
                     recyclerView.apply {
                         adapter = moviesPreviewAdapter
                         setHasFixedSize(true)

@@ -19,8 +19,16 @@ data class Movie (
         val Poster:String = "N/A"
 )
 
+data class MoviePreview(
+        val Title: String = "N/A",
+        val Year: String = "N/A",
+        val imdbID: String = "N/A",
+        val Type: String = "N/A",
+        val Poster: String = "N/A"
+)
+
 data class OmbdMovieResponse (
-        val Search: List<Movie>,
+        val Search: List<MoviePreview>,
         val totalResults: String,
-        val Response: Boolean
+        val Response: String
 )

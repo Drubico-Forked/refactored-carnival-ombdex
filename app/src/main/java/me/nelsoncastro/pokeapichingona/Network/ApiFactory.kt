@@ -13,7 +13,7 @@ object ApiFactory {
     private val authInterceptor = Interceptor {chain->
         val newUrl = chain.request().url()
                 .newBuilder()
-                .addQueryParameter("api_key", AppConstants.ombdApiKey)
+                .addQueryParameter("apikey", AppConstants.ombdApiKey)
                 .build()
 
         val newRequest = chain.request()
@@ -24,8 +24,10 @@ object ApiFactory {
         chain.proceed(newRequest)
     }
 
-    private val ombdClient = OkHttpClient().newBuilder()
-            .addInterceptor(authInterceptor) .build()
+    private val ombdClient = OkHttpClient()
+        .newBuilder()
+        .addInterceptor(authInterceptor)
+        .build()
 
     fun retrofit() : Retrofit = Retrofit.Builder()
             .client(ombdClient)
