@@ -1,5 +1,7 @@
 package me.nelsoncastro.pokeapichingona.Activities
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.preview_add_movie.*
 import me.nelsoncastro.pokeapichingona.Adapters.RVPreviewAdapter
 import me.nelsoncastro.pokeapichingona.Constants.AppConstants
@@ -35,6 +38,7 @@ class NewMovieActivity : AppCompatActivity(){
             clickListener = { movie:MoviePreview, checky: View ->
                 movie.selected = !movie.selected
                 Toast.makeText(this, if (movie.selected) "Selected ${movie.Title}" else "Unselected ${movie.Title}", Toast.LENGTH_SHORT).show()
+                //Snackbar.make(checky.rootView, if (movie.selected) "Selected ${movie.Title}" else "Unselected ${movie.Title}", Snackbar.LENGTH_SHORT)
                 if (movie.selected) checky.visibility = View.VISIBLE else checky.visibility = View.GONE
             })
 
@@ -44,7 +48,7 @@ class NewMovieActivity : AppCompatActivity(){
             this.layoutManager = layoutManager
         }
 
-        MovieViewModel.movieslist.observe(this, Observer { result ->
+        MovieViewModel.getMovieListVM().observe(this, Observer { result ->
                     moviesPreviewAdapter.changeDataSet(result)
         })
 
@@ -52,7 +56,7 @@ class NewMovieActivity : AppCompatActivity(){
             val movieNameQuery = et_search.text.toString()
             if (movieNameQuery.isNotEmpty() && movieNameQuery.isNotBlank()) {
                 MovieViewModel.fetchMovie(movieNameQuery)
-                MovieViewModel.movieslist.observe(this, Observer { result ->
+                MovieViewModel.getMovieListVM().observe(this, Observer { result ->
                     moviesPreviewAdapter.changeDataSet(result)
                })
             }
@@ -61,17 +65,19 @@ class NewMovieActivity : AppCompatActivity(){
         bt_cancel.setOnClickListener {clearView(et_search, moviesPreviewAdapter)}
 
         bt_add_preview.setOnClickListener {
-            MovieViewModel.movieslist.observe(this , Observer { result ->
-                val selectedMovies = result.filter { it.selected }
-                AppConstants.debugPreviewMoviesPreview(selectedMovies)
-                for (movie in selectedMovies) {
-                    MovieViewModel.fetchMovieByTitle(movie.Title)
-                    MovieViewModel.getMovieResult().observe(this, Observer {resultMovie ->
-                        MovieViewModel.insert(resultMovie)
-                    })
-                }
-            })
+            val thenownow = MovieViewModel.getMovieListVM().value
+            val selectedMovies = thenownow?.filter { it.selected } ?: emptymoviespreview
+
+            for (movie in selectedMovies) {
+                MovieViewModel.fetchMovieByTitle(movie.Title)
+                MovieViewModel.getMovieResult().observe(this, Observer {resultMovie ->
+                    MovieViewModel.insert(resultMovie)
+                })
+            }
             clearView(et_search, moviesPreviewAdapter)
+
+            setResult(Activity.RESULT_OK)
+            finish()
         }
 
     }

@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity(), MainListFragment.ClickedMovieListener 
 
     private lateinit var mainFragment: MainListFragment
     private lateinit var mainContentFragment: MainContentFragment
-    private val dummyMovies = arrayListOf(Movie())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +42,8 @@ class MainActivity : AppCompatActivity(), MainListFragment.ClickedMovieListener 
             changeFragment(R.id.land_main_movieviewer_ph, mainContentFragment)
             resource =R.id.land_main_place_holder
         }
-        main_add_button.setOnClickListener { startActivity(Intent(this, NewMovieActivity::class.java)) }
+        val intent = Intent(this, NewMovieActivity::class.java)
+        main_add_button.setOnClickListener { startActivityForResult(intent , AppConstants.ADD_TASK_REQUEST) }
         changeFragment(resource, mainFragment)
     }
 

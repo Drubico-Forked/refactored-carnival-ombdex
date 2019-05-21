@@ -7,12 +7,12 @@ import me.nelsoncastro.pokeapichingona.Models.MoviePreview
 
 object AppConstants {
     val ombdApiKey = BuildConfig.OMBD_API_KEY
-
+    val ADD_TASK_REQUEST = 1
 
     fun debugPreviewMovies(result: List<Movie>){
         Log.d("PETROLERO", "__________________________________________________")
         Log.d("PETROLERO", "NEW MOVIES________________________________________")
-        for (res in result) Log.d("PETROLERO", "${res.Title} -> id = ${res.id}")
+        for (res in result) Log.d("PETROLERO", "${res.Title} -> id = ${res.imdbID}")
         Log.d("PETROLERO", "__________________________________________________")
     }
     fun debugPreviewMoviesPreview(result: List<MoviePreview>){

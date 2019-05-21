@@ -22,7 +22,7 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    val movieslist = MutableLiveData<MutableList<MoviePreview>>()
+    private val movieslist = MutableLiveData<MutableList<MoviePreview>>()
 
     private val movieResult = MutableLiveData<Movie>()
 
@@ -33,6 +33,8 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun getMovieListVM(): LiveData<MutableList<MoviePreview>> = movieslist
+
     fun fetchMovieByTitle(name: String){
         scope.launch {
             val movie = repository.getMovieByTitle(name)
@@ -41,6 +43,7 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun getMovieResult(): LiveData<Movie> = movieResult
+
 
     fun insert(movie: Movie) = scope.launch {
         repository.insert(movie)
