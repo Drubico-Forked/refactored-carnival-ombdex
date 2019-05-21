@@ -16,12 +16,12 @@ import java.lang.RuntimeException
 
 class MainListFragment: Fragment() {
 
-    private lateinit var movies : ArrayList<Movie>
+    private lateinit var movies : List<Movie>
     private lateinit var moviesAdapter: RVMovieAdapter
     var listenerTool : ClickedMovieListener? = null
 
     companion object {
-        fun newInstance(dataset: ArrayList<Movie>): MainListFragment{
+        fun newInstance(dataset: List<Movie>): MainListFragment{
             return MainListFragment().apply {
                 movies = dataset
             }
@@ -34,7 +34,7 @@ class MainListFragment: Fragment() {
         fun managedLandscapeItemClick(movie: Movie)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is ClickedMovieListener) {
             listenerTool = context

@@ -7,23 +7,27 @@ import androidx.room.RoomDatabase
 import me.nelsoncastro.pokeapichingona.Database.Domain.MovieDao
 import me.nelsoncastro.pokeapichingona.Models.Movie
 
-@Database(entities = [Movie::class], version = 1, exportSchema = false)
+@Database(entities = [Movie::class], version = 2, exportSchema = false)
 abstract class MainDatabase : RoomDatabase(){
-    abstract val movieDao: MovieDao
 
-    private lateinit var INSTANCE: MainDatabase
+    abstract fun movieDao(): MovieDao
 
-    fun getDatabase(context: Context): MainDatabase {
-        synchronized(MainDatabase::class) {
-            if (!::INSTANCE.isInitialized) {
+    companion object{
+        @Volatile
+        private var INSTANCE: MainDatabase? = null
+
+        fun getDatabase(appContext: Context): MainDatabase {
+            if (INSTANCE == null) {
+                synchronized(MainDatabase::class) {
                 INSTANCE = Room
-                        .databaseBuilder(context.applicationContext
+                        .databaseBuilder(appContext.applicationContext
                                 , MainDatabase::class.java
                                 ,"movies_db")
                         .fallbackToDestructiveMigration()
                         .build()
+                }
             }
+            return INSTANCE!!
         }
-        return INSTANCE
     }
 }

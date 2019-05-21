@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.preview_add_movie.*
 import me.nelsoncastro.pokeapichingona.Adapters.RVPreviewAdapter
+import me.nelsoncastro.pokeapichingona.Constants.AppConstants
+import me.nelsoncastro.pokeapichingona.Models.Movie
 import me.nelsoncastro.pokeapichingona.Models.MoviePreview
 import me.nelsoncastro.pokeapichingona.R
 import me.nelsoncastro.pokeapichingona.ViewModel.MovieViewModel
@@ -55,21 +58,29 @@ class NewMovieActivity : AppCompatActivity(){
             }
         }
 
-        bt_cancel.setOnClickListener {
-            et_search.text.clear()
-            moviesPreviewAdapter.changeDataSet(emptymoviespreview)
-        }
+        bt_cancel.setOnClickListener {clearView(et_search, moviesPreviewAdapter)}
 
         bt_add_preview.setOnClickListener {
-
+            MovieViewModel.movieslist.observe(this , Observer { result ->
+                val selectedMovies = result.filter { it.selected }
+                AppConstants.debugPreviewMoviesPreview(selectedMovies)
+                for (movie in selectedMovies) {
+                    MovieViewModel.fetchMovieByTitle(movie.Title)
+                    MovieViewModel.getMovieResult().observe(this, Observer {resultMovie ->
+                        MovieViewModel.insert(resultMovie)
+                    })
+                }
+            })
+            clearView(et_search, moviesPreviewAdapter)
         }
 
     }
 
-    fun debugPreviewMovies(result: MutableList<MoviePreview>){
-        Log.d("PETROLERO", "__________________________________________________")
-        for (res in result) Log.d("PETROLERO", "${res.Title} -> selected = ${res.selected}")
-        Log.d("PETROLERO", "__________________________________________________")
+    fun clearView(et: EditText, adapter: RVPreviewAdapter){
+        et.text.clear()
+        adapter.changeDataSet(emptymoviespreview)
     }
+
+
 
 }

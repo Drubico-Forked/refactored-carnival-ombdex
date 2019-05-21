@@ -5,11 +5,15 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
+import me.nelsoncastro.pokeapichingona.Constants.AppConstants
 import me.nelsoncastro.pokeapichingona.Fragments.MainContentFragment
 import me.nelsoncastro.pokeapichingona.Fragments.MainListFragment
 import me.nelsoncastro.pokeapichingona.Models.Movie
 import me.nelsoncastro.pokeapichingona.R
+import me.nelsoncastro.pokeapichingona.ViewModel.MovieViewModel
 
 class MainActivity : AppCompatActivity(), MainListFragment.ClickedMovieListener {
 
@@ -20,10 +24,15 @@ class MainActivity : AppCompatActivity(), MainListFragment.ClickedMovieListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initFragments(dummyMovies)
+
+        val MovieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
+        MovieViewModel.getAll().observe(this, Observer { result ->
+            AppConstants.debugPreviewMovies(result)
+            initFragments(result)
+        })
     }
 
-    fun initFragments(movieList: ArrayList<Movie>){
+    fun initFragments(movieList: List<Movie>){
         mainFragment = MainListFragment.newInstance(movieList)
         var resource = 0
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){

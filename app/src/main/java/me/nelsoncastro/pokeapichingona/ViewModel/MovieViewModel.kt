@@ -1,29 +1,30 @@
 package me.nelsoncastro.pokeapichingona.ViewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
+import me.nelsoncastro.pokeapichingona.Database.MainDatabase
 import me.nelsoncastro.pokeapichingona.Models.Movie
 import me.nelsoncastro.pokeapichingona.Models.MoviePreview
 import me.nelsoncastro.pokeapichingona.Network.ApiFactory
 import me.nelsoncastro.pokeapichingona.Repository.MovieRepository
-import kotlin.coroutines.CoroutineContext
 
-class MovieViewModel : ViewModel () {
+class MovieViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val parentJob = Job()
+    private val repository: MovieRepository
 
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Default
+    init {
+        val movieDao = MainDatabase.getDatabase(app).movieDao()
+        repository = MovieRepository(movieDao, ApiFactory.ombdApi)
+    }
 
-    private val scope = CoroutineScope(coroutineContext)
-
-    private val repository = MovieRepository(ApiFactory.ombdApi)
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     val movieslist = MutableLiveData<MutableList<MoviePreview>>()
 
-    val movieResult = MutableLiveData<Movie>()
+    private val movieResult = MutableLiveData<Movie>()
 
     fun fetchMovie(name: String){
         scope.launch {
@@ -39,5 +40,14 @@ class MovieViewModel : ViewModel () {
         }
     }
 
-    fun cancelAllRequests() = coroutineContext.cancel()
+    fun getMovieResult(): LiveData<Movie> = movieResult
+
+    fun insert(movie: Movie) = scope.launch {
+        repository.insert(movie)
+    }
+
+    fun getAll():LiveData<List<Movie>> = repository.getAllfromRoomDB()
+
+    //fun cancelAllRequests() = Dispatchers.IO.cancel()
+
 }
