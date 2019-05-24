@@ -21,6 +21,7 @@ import me.nelsoncastro.pokeapichingona.R
 
 class MainListFragment: Fragment() {
 
+    private lateinit var movieViewModel: MovieViewModel
     private lateinit var moviesAdapter: RVMovieAdapter
     var listenerTool : ClickedMovieListener? = null
 
@@ -53,15 +54,11 @@ class MainListFragment: Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(me.nelsoncastro.pokeapichingona.R.layout.movies_list_fragment, container, false)
 
-
-        val MovieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
-
-        //val resultSearch = MovieViewModel.getMovieByName(query).value
-        //moviesAdapter.changeDataSet(resultSearch?: AppConstants.emptymovies)
+        movieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
 
         initRecyclerView(resources.configuration.orientation, view)
 
-        MovieViewModel.getAll().observe(this, Observer { result ->
+        movieViewModel.getAll().observe(this, Observer { result ->
             moviesAdapter.changeDataSet(result)
         })
 
@@ -94,14 +91,19 @@ class MainListFragment: Fragment() {
 
         searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                //Hace que cuando presiones el botón de sumbit se ejecute lo que pongas aquí
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                return false
+                //Hace que cambie dinamicamente mientras escribis, porque ejecuta lo que pongas aquí cada vez que escribis.
+                queryToDatabase(newText?: "N/A")
+                return true
             }
 
         })
     }
 
+    private fun queryToDatabase(query: String) = movieViewModel.getMovieByName("%$query%").observe(this,
+        Observer { queryResult -> moviesAdapter.changeDataSet(queryResult)})
 }
