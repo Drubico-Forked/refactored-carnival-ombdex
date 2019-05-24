@@ -72,7 +72,7 @@ class MainListFragment: Fragment() {
         moviesAdapter = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             RVMovieAdapter(movies = AppConstants.emptymovies, clickListener = { movie: Movie -> listenerTool?.managePortraitItemClick(movie)})
         }else {
-            RVMovieAdapter(movies = AppConstants.emptymovies, clickListener = {movie: Movie -> listenerTool?.managedLandscapeItemClick(movie)})
+            RVMovieAdapter(movies = AppConstants.emptymovies, clickListener = { movie: Movie -> listenerTool?.managedLandscapeItemClick(movie)})
         }
 
         recyclerview.apply {
@@ -89,7 +89,7 @@ class MainListFragment: Fragment() {
         val searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
         searchView.isSubmitButtonEnabled = true
 
-        searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 //Hace que cuando presiones el botón de sumbit se ejecute lo que pongas aquí
                 return true

@@ -49,7 +49,8 @@ class MainActivity : AppCompatActivity(), MainListFragment.ClickedMovieListener 
     private fun changeFragment(id: Int, frag: Fragment){ supportFragmentManager.beginTransaction().replace(id, frag).commit() }
 
     override fun managePortraitItemClick(movie: Movie) {
-
+        mainContentFragment = MainContentFragment.newInstance(movie)
+        changeFragment(R.id.portrait_main_place_holder, mainContentFragment)
     }
 
     override fun managedLandscapeItemClick(movie: Movie) {
