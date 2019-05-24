@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity(), MainListFragment.ClickedMovieListener 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setSupportActionBar(toolbarmain)
         initFragments()
     }
 
@@ -54,4 +56,5 @@ class MainActivity : AppCompatActivity(), MainListFragment.ClickedMovieListener 
         mainContentFragment = MainContentFragment.newInstance(movie)
         changeFragment(R.id.land_main_movieviewer_ph, mainContentFragment)
     }
+
 }

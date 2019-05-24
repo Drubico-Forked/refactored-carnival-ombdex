@@ -3,9 +3,7 @@ package me.nelsoncastro.pokeapichingona.Fragments
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -18,6 +16,7 @@ import me.nelsoncastro.pokeapichingona.Models.Movie
 import me.nelsoncastro.pokeapichingona.ViewModel.MovieViewModel
 import java.lang.RuntimeException
 import androidx.appcompat.widget.SearchView
+import me.nelsoncastro.pokeapichingona.R
 
 
 class MainListFragment: Fragment() {
@@ -28,6 +27,12 @@ class MainListFragment: Fragment() {
     interface ClickedMovieListener{
         fun managePortraitItemClick(movie: Movie)
         fun managedLandscapeItemClick(movie: Movie)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+
     }
 
     override fun onAttach(context: Context) {
@@ -47,6 +52,7 @@ class MainListFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(me.nelsoncastro.pokeapichingona.R.layout.movies_list_fragment, container, false)
+
 
         val MovieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
 
@@ -77,6 +83,25 @@ class MainListFragment: Fragment() {
             setHasFixedSize(true)
             layoutManager = linearLayoutManager
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu, menu)
+
+        val searchView = menu.findItem(R.id.app_bar_search).actionView as SearchView
+        searchView.isSubmitButtonEnabled = true
+
+        searchView.setOnQueryTextListener(object :SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+
+        })
     }
 
 }
