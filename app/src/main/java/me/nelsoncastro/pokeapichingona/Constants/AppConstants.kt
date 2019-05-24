@@ -8,6 +8,8 @@ import me.nelsoncastro.pokeapichingona.Models.MoviePreview
 object AppConstants {
     val ombdApiKey = BuildConfig.OMBD_API_KEY
     val ADD_TASK_REQUEST = 1
+    val emptymoviespreview = ArrayList<MoviePreview>()
+    val emptymovies = ArrayList<Movie>()
 
     fun debugPreviewMovies(result: List<Movie>){
         Log.d("PETROLERO", "__________________________________________________")

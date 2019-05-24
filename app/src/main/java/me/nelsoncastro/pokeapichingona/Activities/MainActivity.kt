@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.movies_list_fragment.*
 import me.nelsoncastro.pokeapichingona.Constants.AppConstants
 import me.nelsoncastro.pokeapichingona.Fragments.MainContentFragment
 import me.nelsoncastro.pokeapichingona.Fragments.MainListFragment
@@ -24,15 +25,11 @@ class MainActivity : AppCompatActivity(), MainListFragment.ClickedMovieListener 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val MovieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
-        MovieViewModel.getAll().observe(this, Observer { result ->
-            AppConstants.debugPreviewMovies(result)
-            initFragments(result)
-        })
+        initFragments()
     }
 
-    fun initFragments(movieList: List<Movie>){
-        mainFragment = MainListFragment.newInstance(movieList)
+    fun initFragments(){
+        mainFragment = MainListFragment()
         var resource = 0
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
             resource = R.id.portrait_main_place_holder
@@ -49,15 +46,12 @@ class MainActivity : AppCompatActivity(), MainListFragment.ClickedMovieListener 
 
     private fun changeFragment(id: Int, frag: Fragment){ supportFragmentManager.beginTransaction().replace(id, frag).commit() }
 
-    override fun searchMovie(movieName: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun managePortraitItemClick(movie: Movie) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun managedLandscapeItemClick(movie: Movie) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mainContentFragment = MainContentFragment.newInstance(movie)
+        changeFragment(R.id.land_main_movieviewer_ph, mainContentFragment)
     }
 }

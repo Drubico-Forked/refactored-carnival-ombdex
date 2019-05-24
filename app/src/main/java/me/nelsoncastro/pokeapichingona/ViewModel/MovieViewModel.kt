@@ -51,6 +51,8 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
 
     fun getAll():LiveData<List<Movie>> = repository.getAllfromRoomDB()
 
+    fun getMovieByName(name: String): LiveData<List<Movie>> = repository.getMovieByName(name)
+
     //fun cancelAllRequests() = Dispatchers.IO.cancel()
 
 }

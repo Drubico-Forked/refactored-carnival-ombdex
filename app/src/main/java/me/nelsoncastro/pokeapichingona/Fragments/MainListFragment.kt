@@ -7,29 +7,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.movies_list_fragment.*
 import kotlinx.android.synthetic.main.movies_list_fragment.view.*
 import me.nelsoncastro.pokeapichingona.Adapters.RVMovieAdapter
+import me.nelsoncastro.pokeapichingona.Constants.AppConstants
 import me.nelsoncastro.pokeapichingona.Models.Movie
-import me.nelsoncastro.pokeapichingona.R
+import me.nelsoncastro.pokeapichingona.ViewModel.MovieViewModel
 import java.lang.RuntimeException
+import androidx.appcompat.widget.SearchView
+
 
 class MainListFragment: Fragment() {
 
-    private lateinit var movies : List<Movie>
     private lateinit var moviesAdapter: RVMovieAdapter
     var listenerTool : ClickedMovieListener? = null
 
-    companion object {
-        fun newInstance(dataset: List<Movie>): MainListFragment{
-            return MainListFragment().apply {
-                movies = dataset
-            }
-        }
-    }
-
     interface ClickedMovieListener{
-        fun searchMovie(movieName: String)
         fun managePortraitItemClick(movie: Movie)
         fun managedLandscapeItemClick(movie: Movie)
     }
@@ -50,9 +46,18 @@ class MainListFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(R.layout.movies_list_fragment, container, false)
+        val view = inflater.inflate(me.nelsoncastro.pokeapichingona.R.layout.movies_list_fragment, container, false)
+
+        val MovieViewModel = ViewModelProviders.of(this).get(MovieViewModel::class.java)
+
+        //val resultSearch = MovieViewModel.getMovieByName(query).value
+        //moviesAdapter.changeDataSet(resultSearch?: AppConstants.emptymovies)
 
         initRecyclerView(resources.configuration.orientation, view)
+
+        MovieViewModel.getAll().observe(this, Observer { result ->
+            moviesAdapter.changeDataSet(result)
+        })
 
         return view
     }
@@ -62,9 +67,9 @@ class MainListFragment: Fragment() {
         val recyclerview  = container.rv_list
 
         moviesAdapter = if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            RVMovieAdapter(movies = movies, clickListener = {movie: Movie -> listenerTool?.managePortraitItemClick(movie)})
+            RVMovieAdapter(movies = AppConstants.emptymovies, clickListener = { movie: Movie -> listenerTool?.managePortraitItemClick(movie)})
         }else {
-            RVMovieAdapter(movies = movies, clickListener = {movie: Movie -> listenerTool?.managedLandscapeItemClick(movie)})
+            RVMovieAdapter(movies = AppConstants.emptymovies, clickListener = {movie: Movie -> listenerTool?.managedLandscapeItemClick(movie)})
         }
 
         recyclerview.apply {
@@ -74,5 +79,4 @@ class MainListFragment: Fragment() {
         }
     }
 
-    fun updateMoviesAdapter(movieList: ArrayList<Movie>) { moviesAdapter.changeDataSet(movieList) }
 }

@@ -30,4 +30,6 @@ class MovieRepository(private val movieDao: MovieDao, private val api: OmbdApi) 
     suspend fun insert(movie: Movie) = movieDao.insertMovie(movie)
 
     fun getAllfromRoomDB():LiveData<List<Movie>> = movieDao.loadAllMovies()
+
+    fun getMovieByName(name: String) = movieDao.searchMovieByName(name)
 }

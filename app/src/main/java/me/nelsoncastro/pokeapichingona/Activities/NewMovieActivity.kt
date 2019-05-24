@@ -24,7 +24,6 @@ import me.nelsoncastro.pokeapichingona.ViewModel.MovieViewModel
 
 class NewMovieActivity : AppCompatActivity(){
 
-    val emptymoviespreview = ArrayList<MoviePreview>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,7 @@ class NewMovieActivity : AppCompatActivity(){
 
         val layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         val recyclerView = rv_preview
-        val moviesPreviewAdapter = RVPreviewAdapter(movies = emptymoviespreview,
+        val moviesPreviewAdapter = RVPreviewAdapter(movies = AppConstants.emptymoviespreview,
             clickListener = { movie:MoviePreview, checky: View ->
                 movie.selected = !movie.selected
                 Toast.makeText(this, if (movie.selected) "Selected ${movie.Title}" else "Unselected ${movie.Title}", Toast.LENGTH_SHORT).show()
@@ -66,7 +65,7 @@ class NewMovieActivity : AppCompatActivity(){
 
         bt_add_preview.setOnClickListener {
             val thenownow = MovieViewModel.getMovieListVM().value
-            val selectedMovies = thenownow?.filter { it.selected } ?: emptymoviespreview
+            val selectedMovies = thenownow?.filter { it.selected } ?: AppConstants.emptymoviespreview
 
             for (movie in selectedMovies) {
                 MovieViewModel.fetchMovieByTitle(movie.Title)
@@ -84,7 +83,7 @@ class NewMovieActivity : AppCompatActivity(){
 
     fun clearView(et: EditText, adapter: RVPreviewAdapter){
         et.text.clear()
-        adapter.changeDataSet(emptymoviespreview)
+        adapter.changeDataSet(AppConstants.emptymoviespreview)
     }
 
 

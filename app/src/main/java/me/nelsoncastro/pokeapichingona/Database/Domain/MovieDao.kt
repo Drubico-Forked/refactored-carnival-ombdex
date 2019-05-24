@@ -15,4 +15,7 @@ interface MovieDao {
 
     @Query("select * from Movie")
     fun loadAllMovies(): LiveData<List<Movie>>
+
+    @Query("select * from Movie where Title like :name")
+    fun searchMovieByName(name: String): LiveData<List<Movie>>
 }
