@@ -1,6 +1,7 @@
 package me.nelsoncastro.pokeapichingona.ViewModel
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +12,7 @@ import me.nelsoncastro.pokeapichingona.Models.MoviePreview
 import me.nelsoncastro.pokeapichingona.Network.ApiFactory
 import me.nelsoncastro.pokeapichingona.Repository.MovieRepository
 
-class MovieViewModel(app: Application) : AndroidViewModel(app) {
+class MovieViewModel(val app: Application) : AndroidViewModel(app) {
 
     private val repository: MovieRepository
 
@@ -28,8 +29,14 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
 
     fun fetchMovie(name: String){
         scope.launch {
-            val movies = repository.getMoviesByName(name)
-            movieslist.postValue(movies?: arrayListOf(MoviePreview(Title = "Dummy 1"), MoviePreview(Title = "Dummy 2")))
+            val response=repository.retrieveMoviesByNameAsync(name).await()
+            if(response.isSuccessful){
+                when(response.code()){
+                    200->movieslist.postValue(response.body()?.Search?.toMutableList()?:arrayListOf(MoviePreview(Title = "Dummy 1"), MoviePreview(Title = "Dummy 2")))
+                }
+            }else{
+                Toast.makeText(app, "Ocurrio un error", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -37,8 +44,14 @@ class MovieViewModel(app: Application) : AndroidViewModel(app) {
 
     fun fetchMovieByTitle(name: String){
         scope.launch {
-            val movie = repository.getMovieByTitle(name)
-            movieResult.postValue(movie)
+            val response=repository.retrieveMoviesByTitleAsync(name).await()
+            if(response.isSuccessful) with(response){
+                when(this.code()){
+                    200->movieResult.postValue(this.body())
+                }
+            }else{
+                Toast.makeText(app, "Ocurrio un error", Toast.LENGTH_LONG).show()
+            }
         }
     }
 

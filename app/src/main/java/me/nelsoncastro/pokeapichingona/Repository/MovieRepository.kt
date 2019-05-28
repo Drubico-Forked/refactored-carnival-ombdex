@@ -2,29 +2,20 @@ package me.nelsoncastro.pokeapichingona.Repository
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.Deferred
 import me.nelsoncastro.pokeapichingona.Constants.AppConstants
 import me.nelsoncastro.pokeapichingona.Database.Domain.MovieDao
 import me.nelsoncastro.pokeapichingona.Models.Movie
 import me.nelsoncastro.pokeapichingona.Models.MoviePreview
+import me.nelsoncastro.pokeapichingona.Models.OmbdMovieResponse
 import me.nelsoncastro.pokeapichingona.Network.OmbdApi
+import retrofit2.Response
 
-class MovieRepository(private val movieDao: MovieDao, private val api: OmbdApi) : BaseRepository() {
+class MovieRepository(private val movieDao: MovieDao, private val api: OmbdApi){
 
-    suspend fun getMoviesByName(name: String) : MutableList<MoviePreview>? {
-        val moviesResponse = safeApiCall(
-                call = { api.getMoviesByName(name).await()},
-                errorMessage = "Error Fetching Movies by Name"
-        )
-        return moviesResponse?.Search?.toMutableList()
-    }
+    fun retrieveMoviesByNameAsync(name:String):Deferred<Response<OmbdMovieResponse>> = api.getMoviesByName(name)
 
-    suspend fun getMovieByTitle(name: String) : Movie? {
-        val movieResponse = safeApiCall(
-            call = { api.getMovieByTitle(name).await()},
-            errorMessage = "Error Fetching Movie by Title"
-        )
-        return movieResponse
-    }
+    fun retrieveMoviesByTitleAsync(name:String):Deferred<Response<Movie>> = api.getMovieByTitle(name)
 
     @WorkerThread
     suspend fun insert(movie: Movie) = movieDao.insertMovie(movie)

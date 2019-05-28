@@ -10,16 +10,16 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object ApiFactory {
 
-    private val authInterceptor = Interceptor {chain->
+    private val authInterceptor = Interceptor { chain ->
         val newUrl = chain.request().url()
-                .newBuilder()
-                .addQueryParameter("apikey", AppConstants.ombdApiKey)
-                .build()
+            .newBuilder()
+            .addQueryParameter("apikey", AppConstants.ombdApiKey)
+            .build()
 
         val newRequest = chain.request()
-                .newBuilder()
-                .url(newUrl)
-                .build()
+            .newBuilder()
+            .url(newUrl)
+            .build()
 
         chain.proceed(newRequest)
     }
@@ -29,13 +29,13 @@ object ApiFactory {
         .addInterceptor(authInterceptor)
         .build()
 
-    fun retrofit() : Retrofit = Retrofit.Builder()
-            .client(ombdClient)
-            .baseUrl("http://www.omdbapi.com")
-            .addConverterFactory(MoshiConverterFactory.create())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .build()
+    fun retrofit(): Retrofit = Retrofit.Builder()
+        .client(ombdClient)
+        .baseUrl("http://www.omdbapi.com")
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .build()
 
-    val ombdApi : OmbdApi = retrofit().create(OmbdApi::class.java)
+    val ombdApi: OmbdApi = retrofit().create(OmbdApi::class.java)
 
 }
